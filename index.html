@@ -507,7 +507,7 @@ function renderMapel(fromPackage) {
   (fromPackage ? filtered : availableMapel).forEach(mapel => {
     const item = document.createElement('label');
     item.className = 'mapel-item';
-    const badge = fromPackage ? '<span class="mapel-badge">Dari paket</span>' : '';
+    const badge = fromPackage ? '<span class="mapel-badge">Aktif</span>' : '';
     item.innerHTML = `
       <input type="checkbox" value="${mapel}" />
       <div class="mapel-check"></div>
