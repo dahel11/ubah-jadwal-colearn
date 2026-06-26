@@ -20,9 +20,7 @@
       display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100;
       box-shadow: 0 1px 8px rgba(0,0,0,0.06);
     }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-text { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 20px; color: var(--blue); letter-spacing: -0.5px; }
-    .logo-text span { color: var(--orange); }
+    .logo { display: flex; align-items: center; text-decoration: none; }
     .header-subtitle { margin-left: auto; font-size: 13px; color: var(--gray-500); font-weight: 500; }
     .container { max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
     .page-header { margin-bottom: 32px; }
@@ -177,7 +175,19 @@
 
 <header>
   <a class="logo" href="#">
-    <span class="logo-text">Co<span>·</span>learn</span>
+    <svg height="28" viewBox="0 0 1309 250" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="CoLearn">
+      <g clip-path="url(#cl0)">
+        <path d="M160.394 214.604C155.512 221.355 149.584 227.283 142.834 232.164C129.492 242.029 113.673 247.997 97.1396 249.402C80.6063 250.808 64.0073 247.596 49.1915 240.125C34.3757 232.654 21.9249 221.216 13.2255 207.086C4.52619 192.957 -0.0800781 176.69 -0.0800781 160.097C-0.0800781 143.504 4.52619 127.236 13.2255 113.107C21.9249 98.977 34.3757 87.5396 49.1915 80.0683C64.0073 72.5971 80.6063 69.3854 97.1396 70.7909C113.673 72.1964 129.492 78.164 142.834 88.0289C149.584 92.9104 155.512 98.8383 160.394 105.589L130.597 135.465C127.246 131.552 123.461 128.033 119.314 124.977C110.528 118.353 99.8827 114.656 88.8821 114.409C77.2307 115.096 66.2823 120.209 58.276 128.702C50.2696 137.194 45.8103 148.425 45.8103 160.097C45.8103 171.768 50.2696 182.999 58.276 191.491C66.2823 199.984 77.2307 205.097 88.8821 205.785C100.019 205.62 110.816 201.919 119.712 195.217C123.877 192.183 127.665 188.661 130.994 184.728L160.394 214.604Z" fill="#1E5AF6"/>
+        <path d="M267.417 70.473C285.076 70.7705 302.254 76.2789 316.793 86.3064C331.333 96.3339 342.585 110.434 349.138 126.835C355.691 143.236 357.252 161.208 353.625 178.493C349.998 195.779 341.345 211.607 328.752 223.992C316.159 236.376 300.188 244.763 282.845 248.101C265.501 251.439 247.558 249.578 231.268 242.752C214.979 235.926 201.069 224.44 191.286 209.735C181.502 195.03 176.282 177.763 176.279 160.101C176.362 148.227 178.788 136.486 183.416 125.551C188.044 114.616 194.784 104.701 203.25 96.3755C211.716 88.0496 221.742 81.4759 232.753 77.0311C243.764 72.5863 255.543 70.3577 267.417 70.473ZM311.357 160.101C310.999 151.513 308.125 143.22 303.093 136.251C298.061 129.283 291.092 123.946 283.053 120.905C275.014 117.864 266.258 117.252 257.874 119.145C249.49 121.038 241.847 125.353 235.894 131.554C229.942 137.754 225.942 145.567 224.393 154.022C222.843 162.476 223.812 171.199 227.178 179.108C230.545 187.017 236.161 193.762 243.329 198.505C250.497 203.248 258.901 205.781 267.496 205.789C273.413 205.794 279.27 204.602 284.714 202.284C290.158 199.967 295.077 196.571 299.175 192.303C303.272 188.035 306.464 182.981 308.557 177.447C310.651 171.913 311.603 166.013 311.357 160.101Z" fill="#1E5AF6"/>
+        <path d="M528.59 0.230469H575.867V246.548H528.59V0.230469Z" fill="#1E5AF6"/>
+        <path d="M777.452 221.596C771.808 227.111 765.447 231.841 758.542 235.66C741.832 244.971 723.004 249.814 703.875 249.724C692.105 249.839 680.428 247.634 669.509 243.236C658.591 238.838 648.646 232.333 640.243 224.091C631.839 215.849 625.14 206.033 620.53 195.203C615.92 184.373 613.488 172.741 613.373 160.971C613.259 149.2 615.463 137.523 619.861 126.605C624.259 115.687 630.765 105.742 639.007 97.3381C647.248 88.9343 657.064 82.236 667.895 77.6257C678.725 73.0155 690.357 70.5835 702.127 70.4688C724.937 70.5318 746.792 79.6317 762.906 95.7754C779.02 111.919 788.079 133.791 788.1 156.6C788.034 161.651 787.663 166.692 786.987 171.697L786.352 177.657H661.763C667.007 193.548 681.071 207.533 707.371 207.533C719.395 207.828 731.234 204.537 741.379 198.077C745.749 195.468 749.645 192.137 752.9 188.224L777.452 221.596ZM738.916 142.536C736.792 133.91 731.837 126.244 724.844 120.764C717.851 115.284 709.224 112.306 700.339 112.306C691.455 112.306 682.827 115.284 675.834 120.764C668.841 126.244 663.887 133.91 661.763 142.536H738.916Z" fill="#1E5AF6"/>
+        <path d="M919.45 225.094H917.702C913.905 229.715 909.555 233.851 904.75 237.41C893.851 245.641 880.505 249.978 866.849 249.726C835.066 249.726 814.248 228.67 814.248 200.542C814.248 172.414 833.239 150.961 865.101 144.922L919.45 135.069C918.296 128.201 914.577 122.027 909.046 117.794C903.516 113.561 896.585 111.585 889.653 112.265C879.342 112.163 869.315 115.646 861.287 122.118C857.477 124.785 854.054 127.967 851.116 131.573L823.068 103.445C828.227 97.1292 834.245 91.5662 840.946 86.9182C856.178 76.0237 874.422 70.1368 893.149 70.0732C937.009 70.0732 966.806 100.346 966.806 138.645V245.833H919.132L919.45 225.094ZM919.45 168.918L880.913 175.91C868.597 178.373 861.605 184.73 861.605 193.47C861.605 204.356 868.597 211.03 882.661 211.03C887.663 211.083 892.622 210.105 897.231 208.159C901.839 206.213 905.997 203.34 909.448 199.718C912.898 196.096 915.567 191.803 917.288 187.106C919.008 182.409 919.744 177.408 919.45 172.414V168.918Z" fill="#1E5AF6"/>
+        <path d="M1012.33 73.9649H1060.01V98.5966H1061.75C1065.32 93.4423 1069.48 88.7223 1074.15 84.5327C1084.69 75.5119 1098.1 70.5279 1111.97 70.4688H1115.55V121.48L1111.65 120.765C1107.72 120.077 1103.73 119.705 1099.73 119.653C1076.93 119.653 1059.45 137.292 1059.45 165.341V246.228H1011.78L1012.33 73.9649Z" fill="#1E5AF6"/>
+        <path d="M1145.67 73.9649H1193.34V98.5966H1195.09C1198.88 93.4492 1203.22 88.7329 1208.04 84.5327C1218.61 75.5003 1232.04 70.516 1245.94 70.4688C1280.99 70.4688 1309.03 98.5966 1309.03 142.536V245.831H1261.36V149.529C1261.36 128.473 1249.44 116.157 1229.58 116.157C1224.57 116.104 1219.6 117.083 1214.99 119.034C1210.37 120.985 1206.21 123.866 1202.76 127.496C1199.31 131.127 1196.64 135.429 1194.92 140.136C1193.21 144.843 1192.48 149.852 1192.79 154.852V246.228H1145.11L1145.67 73.9649Z" fill="#1E5AF6"/>
+        <path d="M468.056 159.942L410.211 205.551V114.334L468.056 159.942Z" fill="#FEE643"/>
+      </g>
+      <defs><clipPath id="cl0"><rect width="1309" height="250" fill="white"/></clipPath></defs>
+    </svg>
   </a>
   <span class="header-subtitle">Formulir Perubahan Jadwal</span>
 </header>
@@ -319,7 +329,6 @@ const MAPEL_MANUAL = {
 // ─── LOOKUP ───────────────────────────────────────────────────────────────────
 
 function onHpInput() {
-  // Reset jika user mulai ngetik lagi
   const status = document.getElementById('lookupStatus');
   status.className = 'lookup-status';
   status.innerHTML = '';
@@ -337,7 +346,6 @@ function hideFormCards() {
     document.getElementById(id).style.display = 'none';
   });
   document.getElementById('btnSubmit').style.display = 'none';
-  // Reset data diri
   document.getElementById('nama').value = '';
   document.getElementById('nama').classList.remove('locked','error');
   document.getElementById('nama').readOnly = false;
@@ -393,7 +401,6 @@ function doLookup() {
 function parseMapelFromPackage(packageName, grade) {
   const all = MAPEL_MANUAL[grade] || [];
   const result = [];
-  // Cek 2x dulu (lebih spesifik)
   if (/2x/i.test(packageName)) result.push('Matematika 2x/minggu');
   else if (/matematika|mat/i.test(packageName)) result.push('Matematika 1x/minggu');
   if (/\bipa\b/i.test(packageName)) result.push('IPA');
@@ -406,20 +413,17 @@ function applyAutoFill(data, rawHp) {
   isAutoFill = true;
   const grade = parseInt(data.kelas);
 
-  // Isi nama (locked)
   const namaEl = document.getElementById('nama');
   namaEl.value = data.nama;
   namaEl.classList.add('locked');
   namaEl.readOnly = true;
 
-  // Isi kelas (locked)
   const kelasEl = document.getElementById('kelasSelect');
   kelasEl.value = String(grade);
   kelasEl.classList.add('locked');
   kelasEl.disabled = true;
   selectedKelas = grade;
 
-  // Label dengan badge
   document.getElementById('titleDataDiri').innerHTML =
     'Data Diri <span class="lock-pill">✓ Terverifikasi</span>';
   document.getElementById('labelNama').innerHTML =
@@ -429,10 +433,8 @@ function applyAutoFill(data, rawHp) {
 
   document.getElementById('cardDataDiri').style.display = 'block';
 
-  // Parse mapel dari offering_names / package_name
   availableMapel = parseMapelFromPackage(data.package_name || '', grade);
 
-  // Judul mapel dengan badge
   document.getElementById('titleMapel').innerHTML =
     'Mata Pelajaran yang Ingin Diubah <span class="lock-pill">✓ Dari paketmu</span>';
   document.getElementById('hintMapel').textContent =
@@ -447,7 +449,6 @@ function applyAutoFill(data, rawHp) {
 function applyManual() {
   isAutoFill = false;
 
-  // Reset label
   document.getElementById('titleDataDiri').innerHTML = 'Data Diri';
   document.getElementById('labelNama').innerHTML =
     'Nama Lengkap Murid <span class="required">*</span>';
@@ -494,7 +495,6 @@ function renderMapel(fromPackage) {
   container.innerHTML = '';
   selectedMapel = [];
 
-  // Filter hanya yang punya jadwal tersedia
   const filtered = availableMapel.filter(m =>
     !fromPackage || (JADWAL_BARU[selectedKelas] && JADWAL_BARU[selectedKelas][m])
   );
@@ -753,7 +753,6 @@ function loadJadwal() {
         });
       });
 
-      // Sort jadwal: hari → jam
       Object.values(JADWAL_BARU).forEach(subjects => {
         Object.keys(subjects).forEach(subj => {
           subjects[subj].sort((a, b) => {
