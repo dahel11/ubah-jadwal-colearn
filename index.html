@@ -377,7 +377,7 @@ function doLookup() {
     .then(data => {
       btn.disabled = false;
       btn.textContent = 'Cek Data';
-      if (data.found) {
+      if (data.status === 'found') {
         status.className = 'lookup-status found';
         status.innerHTML = '✓ Data ditemukan! Nama & kelas terisi otomatis.';
         applyAutoFill(data, raw);
@@ -411,10 +411,11 @@ function parseMapelFromPackage(packageName, grade) {
 
 function applyAutoFill(data, rawHp) {
   isAutoFill = true;
-  const grade = parseInt(data.kelas);
+  const d = data.data;
+  const grade = parseInt(d.grade);
 
   const namaEl = document.getElementById('nama');
-  namaEl.value = data.nama;
+  namaEl.value = d.name;
   namaEl.classList.add('locked');
   namaEl.readOnly = true;
 
@@ -433,7 +434,7 @@ function applyAutoFill(data, rawHp) {
 
   document.getElementById('cardDataDiri').style.display = 'block';
 
-  availableMapel = parseMapelFromPackage(data.package_name || '', grade);
+  availableMapel = parseMapelFromPackage(d.package_name || '', grade);
 
   document.getElementById('titleMapel').innerHTML =
     'Mata Pelajaran yang Ingin Diubah <span class="lock-pill">✓ Dari paketmu</span>';
