@@ -120,6 +120,15 @@
     .mapel-item.checked .mapel-label { color: var(--blue-dark); }
     .mapel-badge { background: var(--blue-light); color: var(--blue); font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; border: 1px solid var(--blue-mid); white-space: nowrap; }
 
+    /* Info: kelas belum mulai */
+    .mulai-info {
+      display: none; margin-top: 8px; padding: 9px 12px;
+      background: var(--blue-light); border: 1px solid var(--blue-mid); border-radius: 8px;
+      color: var(--blue-dark); font-size: 12.5px; font-weight: 600; line-height: 1.5;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .mulai-info.show { display: block; }
+
     .alasan-lain-wrapper { margin-top: 14px; display: none; }
     .alasan-lain-wrapper.show { display: block; }
     .btn-submit {
@@ -560,6 +569,24 @@ function cekBentrok() {
   }
 }
 
+function onJadwalChange(mapel) {
+  const safeId = mapel.replace(/[\s\/]/g,'_');
+  const sel = document.getElementById('jadwal_' + safeId);
+  const info = document.getElementById('mulaiInfo_' + safeId);
+  if (sel && info) {
+    const slots = (JADWAL_BARU[selectedKelas] && JADWAL_BARU[selectedKelas][mapel]) || [];
+    const slot = slots.find(s => s.slot === sel.value);
+    if (slot && slot.belumMulai) {
+      info.innerHTML = `🕐 Kelas ini <strong>belum mulai</strong> — pertemuan pertama: ${slot.mulaiLong}`;
+      info.classList.add('show');
+    } else {
+      info.classList.remove('show');
+      info.innerHTML = '';
+    }
+  }
+  cekBentrok();
+}
+
 function renderJadwalBaru() {
   const container = document.getElementById('jadwalBaruContainer');
   const card = document.getElementById('cardJadwalBaru');
@@ -567,6 +594,7 @@ function renderJadwalBaru() {
   if (selectedMapel.length === 0) { card.style.display = 'none'; return; }
   card.style.display = 'block';
   selectedMapel.forEach(mapel => {
+    const safeId = mapel.replace(/[\s\/]/g,'_');
     const group = document.createElement('div');
     group.className = 'form-group';
     group.style.marginBottom = '16px';
@@ -574,9 +602,10 @@ function renderJadwalBaru() {
     const optHtml = slots.map(s => `<option value="${s.slot}">${s.label}</option>`).join('');
     group.innerHTML = `
       <label>${mapel}</label>
-      <select id="jadwal_${mapel.replace(/[\s\/]/g,'_')}" onchange="cekBentrok()">
+      <select id="jadwal_${safeId}" onchange="onJadwalChange('${mapel}')">
         <option value="">-- Pilih jadwal baru --</option>${optHtml}
       </select>
+      <div class="mulai-info" id="mulaiInfo_${safeId}"></div>
       ${slots.length === 0 ? '<div style="color:#EF4444;font-size:12px;margin-top:6px">Tidak ada jadwal tersedia.</div>' : ''}
     `;
     container.appendChild(group);
@@ -708,6 +737,21 @@ function resetForm() {
 
 // ─── LOAD JADWAL ──────────────────────────────────────────────────────────────
 
+// Parser tanggal: cek format dd/mm/yyyy dulu (format Indonesia),
+// baru fallback ke ISO / format lain yang dikenali Date().
+function parseTanggalMulai(raw) {
+  if (!raw) return null;
+  const s = raw.toString().trim();
+  if (!s) return null;
+  const m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (m) {
+    const d = new Date(parseInt(m[3]), parseInt(m[2]) - 1, parseInt(m[1]));
+    return isNaN(d) ? null : d;
+  }
+  const d = new Date(s);
+  return isNaN(d) ? null : d;
+}
+
 function loadJadwal() {
   const loadingEl = document.getElementById('jadwalLoadingOverlay');
   const errorEl   = document.getElementById('jadwalError');
@@ -727,6 +771,9 @@ function loadJadwal() {
         const m = label.match(/(\d{2}):(\d{2})[-–]/);
         return m ? parseInt(m[1]) * 60 + parseInt(m[2]) : 999;
       }
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
       JADWAL_BARU = {};
       rows.forEach(row => {
         const grade   = parseInt(row['course_grade']);
@@ -740,6 +787,19 @@ function loadJadwal() {
         const teacher = (row['teacher_name'] || '').toString().trim();
         if (!grade || !subject || status !== 'Available' || !(sisa > 0)) return;
 
+        // Tag "kelas belum mulai" dari kolom first_class_on_that_slot
+        const firstClass = parseTanggalMulai(row['first_class_on_that_slot']);
+        let belumMulai = false, mulaiShort = '', mulaiLong = '';
+        if (firstClass) {
+          const fc = new Date(firstClass);
+          fc.setHours(0, 0, 0, 0);
+          if (fc > today) {
+            belumMulai = true;
+            mulaiShort = firstClass.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+            mulaiLong  = firstClass.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+          }
+        }
+
         let key = subject;
         if (subject === 'Matematika') {
           key = freq === '2x' ? 'Matematika 2x/minggu' : 'Matematika 1x/minggu';
@@ -749,8 +809,11 @@ function loadJadwal() {
         if (!JADWAL_BARU[grade][key]) JADWAL_BARU[grade][key] = [];
         JADWAL_BARU[grade][key].push({
           slot,
-          label: `${days}, ${time} WIB — ${teacher} (sisa: ${sisa})`,
-          firstDay: days.split(',')[0].trim()
+          label: `${days}, ${time} WIB — ${teacher} (sisa: ${sisa})` + (belumMulai ? ` • 🆕 Kelas belum mulai (mulai ${mulaiShort})` : ''),
+          firstDay: days.split(',')[0].trim(),
+          belumMulai,
+          mulaiShort,
+          mulaiLong
         });
       });
 
