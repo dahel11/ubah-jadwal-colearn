@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       return String(a.session_time).localeCompare(String(b.session_time));
     });
 
-    return res.status(200).json({ jadwal, total: jadwal.length });
+    return res.status(200).json(jadwal);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
