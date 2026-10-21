@@ -1,25 +1,78 @@
-// api/lookup.js
-// Vercel serverless function: proxy lookup murid ke Google Apps Script
 const APPS_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbwf0JwNLm2MLzXEu49H63fwEaA_UIzemO0hmQkWdP06v6vzJLYndFM0_rikoADHIA1j/exec';
+  'https://script.google.com/macros/s/AKfycbz9vU6mgrKHnZprDyFF4LrMUbu7wv_DKaJOdFC0hgq_ZjAc9HMqNNA1RWEU0oz6u_Jk/exec';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  res.setHeader('Cache-Control', 'no-store');
 
-  const { hp } = req.query;
-  if (!hp || !/^\d{7,14}$/.test(hp)) {
-    return res.status(400).json({ found: false, error: 'Invalid HP format' });
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', 'GET');
+    return res.status(405).json({
+      status: 'error',
+      error: 'Method not allowed'
+    });
   }
 
+  const hp = req.query.hp;
+
+  if (typeof hp !== 'string' || !/^\d{7,15}$/.test(hp)) {
+    return res.status(400).json({
+      status: 'error',
+      error: 'Format nomor HP tidak valid'
+    });
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
   try {
-    const url      = `${APPS_SCRIPT_URL}?action=lookup&hp=${encodeURIComponent(hp)}`;
-    const response = await fetch(url, { redirect: 'follow' });
-    const data     = await response.json();
+    const url =
+      `${APPS_SCRIPT_URL}?action=lookup&hp=${encodeURIComponent(hp)}`;
+
+    const response = await fetch(url, {
+      redirect: 'follow',
+      signal: controller.signal
+    });
+
+    if (!response.ok) {
+      throw new Error('Backend lookup tidak dapat diakses');
+    }
+
+    const data = await response.json();
+
+    if (data.status === 'error' || data.success === false) {
+      return res.status(502).json({
+        status: 'error',
+        error: data.error || 'Gagal membaca data murid'
+      });
+    }
+
+    if (
+      data.status !== 'found' &&
+      data.status !== 'not_found'
+    ) {
+      throw new Error('Respons lookup tidak valid');
+    }
+
+    if (
+      data.status === 'found' &&
+      (!data.data || !data.data.user_id)
+    ) {
+      throw new Error('Data user_id murid belum tersedia');
+    }
+
     return res.status(200).json(data);
-  } catch (err) {
-    return res.status(200).json({ found: false, error: err.message });
+
+  } catch (error) {
+    return res.status(
+      error.name === 'AbortError' ? 504 : 502
+    ).json({
+      status: 'error',
+      error: error.name === 'AbortError'
+        ? 'Pencarian terlalu lama. Silakan coba lagi.'
+        : 'Gagal membaca data murid. Silakan coba lagi.'
+    });
+
+  } finally {
+    clearTimeout(timeout);
   }
 }
