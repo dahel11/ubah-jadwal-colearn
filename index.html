@@ -618,7 +618,7 @@
     const app = document.getElementById('portal');
 
     const HOURS =
-      'Pengajuan diproses Senin–Jumat, pukul 11.00–20.00 WIB. Pengajuan di luar jam tersebut diproses pada jam operasional berikutnya.';
+      '⚠️ Pengajuan diproses Senin–Jumat, pukul 11.00–20.00 WIB. Pengajuan di luar jam tersebut diproses pada jam operasional berikutnya.';
 
     const DONE =
       'Silahkan cek jadwalnya di aplikasi/Website CoLearn';
@@ -1446,35 +1446,51 @@
     function updateSummary() {
       const result = collect();
 
-      $('summary-content').innerHTML =
-        result.items.length
-          ? result.items.map(item => `
-              <div class="summary-row">
-                <strong>${esc(item.name)}</strong>
+      const identity = `
+        <div class="summary-row">
+          <strong>Nama murid</strong>
+          <span>${esc(state.student.name)}</span>
+        </div>
 
-                <span>${esc(
-                  item.row
-                    ? scheduleLabel(item.row)
-                    : 'Belum memilih jadwal'
-                )}</span>
-              </div>
-            `).join('') +
-            (
-              state.reason.trim()
-                ? `
-                  <div class="summary-row">
-                    <strong>Alasan</strong>
-                    <span>${esc(state.reason.trim())}</span>
-                  </div>
-                `
-                : ''
-            )
-          : `
+        <div class="summary-row">
+          <strong>Kelas</strong>
+          <span>Kelas ${esc(state.student.grade)}</span>
+        </div>
+      `;
+
+      const changes = result.items.length
+        ? result.items.map(item => `
+            <div class="summary-row">
+              <strong>${esc(item.name)}</strong>
+
+              <span>${esc(
+                item.row
+                  ? scheduleLabel(item.row)
+                  : 'Belum memilih jadwal'
+              )}</span>
+            </div>
+          `).join('') +
+          (
+            state.reason.trim()
+              ? `
+                <div class="summary-row">
+                  <strong>Alasan</strong>
+                  <span>${esc(state.reason.trim())}</span>
+                </div>
+              `
+              : ''
+          )
+        : `
+          <div class="summary-row">
             <p class="muted">
               Pilih mata pelajaran dan jadwal
               untuk melihat ringkasannya.
             </p>
-          `;
+          </div>
+        `;
+
+      $('summary-content').innerHTML =
+        identity + changes;
 
       $('send-button').disabled =
         state.busy || !result.valid;
@@ -1547,6 +1563,7 @@
       write(pendingKey(), payload);
 
       setSending(true);
+
       $('send-button').textContent =
         'Mengirim pengajuan...';
 
