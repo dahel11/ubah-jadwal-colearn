@@ -652,8 +652,9 @@
           <input
             id="phone"
             type="tel"
+            inputmode="numeric"
             autocomplete="tel"
-            placeholder="Contoh: 081234567890"
+            placeholder="Contoh: 81234567890"
             required>
 
           <div id="error">
@@ -671,6 +672,7 @@
 
     async function lookup(event) {
       event.preventDefault();
+
       if (busy) return;
 
       let phone = document.getElementById('phone')
@@ -683,7 +685,9 @@
       }
 
       if (!/^8\d{7,12}$/.test(phone)) {
-        return showError('Masukkan nomor HP yang valid.');
+        return showError(
+          'Masukkan nomor HP yang valid.'
+        );
       }
 
       busy = true;
@@ -874,9 +878,11 @@
       if (!schedules) {
         app.innerHTML = `
           ${header('home')}
+
           <div class="card">
             Memuat jadwal tersedia...
           </div>
+
           <div id="error"></div>
         `;
 
@@ -884,7 +890,9 @@
           const rows = await api('/api/jadwal');
 
           if (!Array.isArray(rows)) {
-            throw new Error('Data jadwal tidak valid.');
+            throw new Error(
+              'Data jadwal tidak valid.'
+            );
           }
 
           schedules = rows;
@@ -928,6 +936,7 @@
                         name
                       ) ? 'checked' : ''
                     }>
+
                   <span>${esc(name)}</span>
                 </label>
               `).join('')
@@ -1008,6 +1017,7 @@
 
     function renderSlots() {
       const list = subjects();
+
       const field =
         document.getElementById('slot-fields');
 
@@ -1036,9 +1046,11 @@
                 ${rows.map((row, j) => `
                   <option
                     value="${j}"
-                    ${draft[name] === String(j)
-                      ? 'selected'
-                      : ''}>
+                    ${
+                      draft[name] === String(j)
+                        ? 'selected'
+                        : ''
+                    }>
                     ${esc(
                       scheduleLabel(row) +
                       ' (sisa: ' + row.sisa_kursi + ')' +
@@ -1423,6 +1435,7 @@
           app.innerHTML = `
             ${header('history')}
             <div id="error"></div>
+
             ${primary(
               'Coba Muat Riwayat Lagi',
               'history'
@@ -1475,7 +1488,13 @@
       }
     });
 
+    // Hapus angka 0 di awal saat nomor diketik atau di-paste.
     app.addEventListener('input', event => {
+      if (event.target.id === 'phone') {
+        event.target.value =
+          event.target.value.replace(/^0+/, '');
+      }
+
       if (event.target.id === 'other') {
         reason = event.target.value;
       }
