@@ -507,7 +507,9 @@
             ? 'rejected'
             : ''
       ) +
-      '">' + esc(status) + '</span>';
+      '">' +
+      esc(status === 'Selesai' ? 'Sudah diubah' : status) +
+      '</span>';
 
     function store(key, value) {
       try {
@@ -593,7 +595,6 @@
       }
     }
 
-    // Header halaman murid
     function header(tab) {
       return `
         <div class="page-badge">📅 Perubahan Jadwal</div>
@@ -623,7 +624,6 @@
       `;
     }
 
-    // Halaman cek nomor HP
     function login(message = '') {
       screen = 'login';
       view++;
@@ -671,7 +671,6 @@
 
     async function lookup(event) {
       event.preventDefault();
-
       if (busy) return;
 
       let phone = document.getElementById('phone')
@@ -684,9 +683,7 @@
       }
 
       if (!/^8\d{7,12}$/.test(phone)) {
-        return showError(
-          'Masukkan nomor HP yang valid.'
-        );
+        return showError('Masukkan nomor HP yang valid.');
       }
 
       busy = true;
@@ -734,7 +731,6 @@
       }
     }
 
-    // Halaman utama murid
     function home() {
       screen = 'home';
       view++;
@@ -752,10 +748,7 @@
             sesuai paket belajarmu.
           </p>
 
-          ${primary(
-            'Ajukan Perubahan Jadwal →',
-            'form'
-          )}
+          ${primary('Ajukan Perubahan Jadwal →', 'form')}
         </section>
 
         <div id="error"></div>
@@ -775,15 +768,11 @@
         ` : ''}
 
         <p style="margin-top:18px">
-          <button
-            class="secondary"
-            data-action="copy">
+          <button class="secondary" data-action="copy">
             Salin Link Riwayat
           </button>
 
-          <button
-            class="secondary"
-            data-action="logout">
+          <button class="secondary" data-action="logout">
             Ganti Murid
           </button>
         </p>
@@ -792,7 +781,6 @@
       `;
     }
 
-    // Mapel berdasarkan paket murid
     function subjects() {
       const p = String(student.package_name);
       const result = [];
@@ -812,7 +800,6 @@
       return result;
     }
 
-    // Slot sesuai kelas, mapel, dan ketersediaan.
     function slots(subject) {
       return (schedules || []).filter(row => {
         const name = String(row.subject || '').trim();
@@ -839,11 +826,8 @@
     const scheduleLabel = row =>
       String(row.days || '') + ', ' +
       String(row.session_time || '') + ' WIB' +
-      (row.teacher_name
-        ? ' — ' + row.teacher_name
-        : '');
+      (row.teacher_name ? ' — ' + row.teacher_name : '');
 
-    // Tag kelas baru saat memilih jadwal.
     function firstClass(raw) {
       if (!raw) return '';
 
@@ -883,20 +867,16 @@
         }) + ')';
     }
 
-    // Halaman form pengajuan
     async function form() {
       screen = 'form';
-
       const current = ++view;
 
       if (!schedules) {
         app.innerHTML = `
           ${header('home')}
-
           <div class="card">
             Memuat jadwal tersedia...
           </div>
-
           <div id="error"></div>
         `;
 
@@ -904,9 +884,7 @@
           const rows = await api('/api/jadwal');
 
           if (!Array.isArray(rows)) {
-            throw new Error(
-              'Data jadwal tidak valid.'
-            );
+            throw new Error('Data jadwal tidak valid.');
           }
 
           schedules = rows;
@@ -917,10 +895,7 @@
           app.innerHTML = `
             ${header('home')}
             <div id="error"></div>
-            ${primary(
-              'Coba Muat Jadwal Lagi',
-              'form'
-            )}
+            ${primary('Coba Muat Jadwal Lagi', 'form')}
           `;
 
           showError(error.message);
@@ -951,11 +926,8 @@
                       Object.prototype.hasOwnProperty.call(
                         draft,
                         name
-                      )
-                        ? 'checked'
-                        : ''
+                      ) ? 'checked' : ''
                     }>
-
                   <span>${esc(name)}</span>
                 </label>
               `).join('')
@@ -968,9 +940,7 @@
             }
           </section>
 
-          <section
-            class="card"
-            id="slot-fields"></section>
+          <section class="card" id="slot-fields"></section>
 
           <section class="card">
             <div class="card-title">
@@ -982,25 +952,15 @@
             </label>
 
             <select id="reason">
-              <option value="">
-                -- Pilih alasan --
-              </option>
-              <option>
-                Bentrok dengan jadwal sekolah
-              </option>
-              <option>
-                Bentrok dengan les lain
-              </option>
+              <option value="">-- Pilih alasan --</option>
+              <option>Bentrok dengan jadwal sekolah</option>
+              <option>Bentrok dengan les lain</option>
               <option>Ingin ubah guru</option>
-              <option value="lain">
-                Alasan lain...
-              </option>
+              <option value="lain">Alasan lain...</option>
             </select>
 
             <div id="other-reason" hidden>
-              <label
-                for="other"
-                style="margin-top:16px">
+              <label for="other" style="margin-top:16px">
                 Ceritakan alasanmu
               </label>
 
@@ -1018,9 +978,7 @@
 
           <div id="error"></div>
 
-          <button
-            type="submit"
-            class="btn-submit">
+          <button type="submit" class="btn-submit">
             Cek Pengajuan →
           </button>
         </form>
@@ -1036,11 +994,7 @@
       ];
 
       reasonSelect.value = reason
-        ? (
-          standard.includes(reason)
-            ? reason
-            : 'lain'
-        )
+        ? (standard.includes(reason) ? reason : 'lain')
         : '';
 
       document.getElementById('other-reason').hidden =
@@ -1054,7 +1008,6 @@
 
     function renderSlots() {
       const list = subjects();
-
       const field =
         document.getElementById('slot-fields');
 
@@ -1075,10 +1028,7 @@
                 ${esc(name)}
               </label>
 
-              <select
-                id="slot-${i}"
-                data-slot="${i}">
-
+              <select id="slot-${i}" data-slot="${i}">
                 <option value="">
                   -- Pilih jadwal baru --
                 </option>
@@ -1086,11 +1036,9 @@
                 ${rows.map((row, j) => `
                   <option
                     value="${j}"
-                    ${
-                      draft[name] === String(j)
-                        ? 'selected'
-                        : ''
-                    }>
+                    ${draft[name] === String(j)
+                      ? 'selected'
+                      : ''}>
                     ${esc(
                       scheduleLabel(row) +
                       ' (sisa: ' + row.sisa_kursi + ')' +
@@ -1114,7 +1062,6 @@
       `;
     }
 
-    // Deteksi jadwal yang saling tumpang tindih.
     function hasConflict(rows) {
       function minutes(row) {
         const match = String(row.session_time).match(
@@ -1123,10 +1070,8 @@
 
         return match
           ? [
-              Number(match[1]) * 60 +
-                Number(match[2]),
-              Number(match[3]) * 60 +
-                Number(match[4])
+              Number(match[1]) * 60 + Number(match[2]),
+              Number(match[3]) * 60 + Number(match[4])
             ]
           : null;
       }
@@ -1145,9 +1090,7 @@
 
           return (
             x && y &&
-            days(a).some(
-              day => days(b).includes(day)
-            ) &&
+            days(a).some(day => days(b).includes(day)) &&
             x[0] < y[1] &&
             y[0] < x[1]
           );
@@ -1155,7 +1098,6 @@
       );
     }
 
-    // Siapkan pengajuan sebelum dikirim.
     function prepare(event) {
       event.preventDefault();
 
@@ -1185,12 +1127,10 @@
         );
       }
 
-      const r =
-        document.getElementById('reason');
+      const r = document.getElementById('reason');
 
       reason = r.value === 'lain'
-        ? document.getElementById('other')
-            .value.trim()
+        ? document.getElementById('other').value.trim()
         : r.value;
 
       if (!reason) {
@@ -1230,7 +1170,6 @@
       review();
     }
 
-    // Halaman ringkasan
     function review() {
       screen = 'review';
       view++;
@@ -1258,28 +1197,20 @@
         ${notice(hours)}
         <div id="error"></div>
 
-        ${primary(
-          'Kirim Pengajuan',
-          'send'
-        )}
+        ${primary('Kirim Pengajuan', 'send')}
 
         <p style="margin-top:15px">
-          <button
-            class="secondary"
-            data-action="form">
+          <button class="secondary" data-action="form">
             Ubah Pilihan
           </button>
 
-          <button
-            class="secondary"
-            data-action="history">
+          <button class="secondary" data-action="history">
             Cek Riwayat
           </button>
         </p>
       `;
     }
 
-    // Kirim dan tunggu konfirmasi penyimpanan.
     async function send(button) {
       if (busy || !pending) return;
 
@@ -1358,10 +1289,8 @@
       }
     }
 
-    // Riwayat semua pengajuan murid
     async function historyPage() {
       screen = 'history';
-
       const current = ++view;
 
       app.innerHTML = `
@@ -1449,9 +1378,7 @@
                 `).join('')}
 
                 <details ${i === 0 ? 'open' : ''}>
-                  <summary>
-                    Detail pengajuan
-                  </summary>
+                  <summary>Detail pengajuan</summary>
 
                   <p class="message"><b>Alasan:</b><br>${esc(request.reason)}</p>
 
@@ -1479,12 +1406,9 @@
           }
 
           <div id="error"></div>
-
           ${notice(hours)}
 
-          <button
-            class="secondary"
-            data-action="copy">
+          <button class="secondary" data-action="copy">
             Salin Link Riwayat
           </button>
 
@@ -1499,7 +1423,6 @@
           app.innerHTML = `
             ${header('history')}
             <div id="error"></div>
-
             ${primary(
               'Coba Muat Riwayat Lagi',
               'history'
@@ -1511,7 +1434,6 @@
       }
     }
 
-    // Event form
     app.addEventListener('submit', event => {
       if (event.target.id === 'lookup') {
         lookup(event);
@@ -1527,8 +1449,7 @@
       const list = student ? subjects() : [];
 
       if (el.dataset.subject !== undefined) {
-        const name =
-          list[Number(el.dataset.subject)];
+        const name = list[Number(el.dataset.subject)];
 
         if (el.checked) {
           draft[name] = '';
@@ -1545,13 +1466,11 @@
       }
 
       if (el.id === 'reason') {
-        document.getElementById(
-          'other-reason'
-        ).hidden = el.value !== 'lain';
+        document.getElementById('other-reason').hidden =
+          el.value !== 'lain';
 
         reason = el.value === 'lain'
-          ? document.getElementById('other')
-              .value.trim()
+          ? document.getElementById('other').value.trim()
           : el.value;
       }
     });
@@ -1562,7 +1481,6 @@
       }
     });
 
-    // Event tombol
     app.addEventListener('click', async event => {
       const button =
         event.target.closest('[data-action]');
@@ -1576,10 +1494,7 @@
       if (action === 'history') historyPage();
       if (action === 'send') send(button);
 
-      if (
-        action === 'retry-pending' &&
-        pending
-      ) {
+      if (action === 'retry-pending' && pending) {
         review();
       }
 
@@ -1615,17 +1530,12 @@
       }
     });
 
-    // Pulihkan data pada tab browser yang sama.
     const saved = load('colearn-student');
-
     let pathId = '';
 
     try {
       pathId = decodeURIComponent(
-        location.pathname.replace(
-          /^\/+|\/+$/g,
-          ''
-        )
+        location.pathname.replace(/^\/+|\/+$/g, '')
       );
     } catch (_) {}
 
