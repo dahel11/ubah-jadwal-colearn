@@ -5,7 +5,7 @@ export const config = {
 };
 
 const APPS_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbz9vU6mgrKHnZprDyFF4LrMUbu7wv_DKaJOdFC0hgq_ZjAc9HMqNNA1RWEU0oz6u_Jk/exec';
+  'https://script.google.com/macros/s/AKfycbwxitwa0fRjdG54j0fEkf-rX9KfxiSaNuAzo0JNhP2CwUbtRJB4h7TORhGb1Wt44f_oyA/exec';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
